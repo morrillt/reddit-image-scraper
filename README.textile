@@ -1,1 +1,5 @@
-h2. blah dee da
+h2. Learning Proj
+This project is intended to be a learning project where people who are relative noobs can come and build something together
+
+h2. Proj
+This is a script about scraping images from reddit, and then later we will do something with it, like make a screensaver or make pinterest bots :)
