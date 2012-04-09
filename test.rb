@@ -5,7 +5,6 @@
 # todo - integrate typhoeus by paul dix for multithreaded event processing
 
 
-
 require 'rubygems'
 require 'json'
 require 'net/http'
@@ -13,47 +12,75 @@ require 'rest_client'
 require 'nokogiri'
 
 
-#Returns a json dump from subredit
-def open_subredit(url)
-  url = 'http://api.reddit.com/r/dogfort.json'
+#Returns a json dump from subredit URL
+
+class  RedditParser
   
-  response = RestClient.get(url)
+  def initialize(url)
+    
+    getPhotoStack()
+    findBiggestPhotoUrl
+    @photoSet = []
+    
+  end 
+  
+  def getPhotoStack
+    
 
-  newobject = JSON.parse(response)
-
-  # newobject['data']['children'].each { |dogurl| dogurl['data']['url'] NEED TO ADD CLOSING } 
-
-  dogurl =  newobject['data']['children'][0]['data']['url']
-
-  response = RestClient.get(dogurl)
+  end  
+  
+  # returns parsed json from reddit api / json url
+  def getJson(redditUrl)
+    
+  end
+  
+  #Returns the link to the largest url on a given HTML page.
+  def findBiggestPhotoUrl
+    # @parsedJson['data']['children'].each { |dogurl| dogurl['data']['url'] NEED TO ADD CLOSING } 
+    parsedJson 
+    
+    response = RestClient.get(redditUrl)
+    parsedJson = JSON.parse(response)
+    
+    dogurl =  parsedJson['data']['children'][0]['data']['url']
+    response = RestClient.get(dogurl)
+    @doc = Nokogiri::HTML(response.body)
+    
+    highestPicLength = 0
+    @doc.css("img").each do |node|
+      puts "looking up imgs"
+      imgurl = node['src']
+      response = RestClient.get imgurl, :accept => 'image/jpeg'
+     # puts " \n\n\n\n\n #{imgurl} \n\n"
+     # puts "\n\n length: #{response.headers[:content_length]} \n\n"
+      length = response.headers[:content_length].to_i
+      puts response.headers.inspect
+    
+      if length > highestPicLength
+        highestPicLength = length;
+        @besturl = imgurl
+      end
+    end
+    puts @besturl
+    @besturl
+  end
 end
 
-open_subredit 'http://api.reddit.com/r/dogfort.json'
-
-
-
-
-
-
-doc = Nokogiri::HTML(response.body)
-
-blip = doc.css('img')
-
-
-
-
-doc.css("img").each do |node|
-  # node.src
-
-  puts "looking up imgs"
-  imgurl = node['src']
   
-  response = RestClient.get imgurl, :accept => 'image/jpeg'
-  puts " \n\n\n\n\n #{imgurl} \n\n"
-  puts "\n\n length: #{response.headers[:content_length]} \n\n"
-  puts response.headers.inspect
-  
-end
+herewego = RedditParser.new('http://api.reddit.com/r/dogfort.json')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
