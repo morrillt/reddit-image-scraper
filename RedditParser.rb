@@ -16,6 +16,7 @@ require 'nokogiri'
 
 class  RedditParser
   attr_accessor :photo_set
+  
   def initialize(redditURL)
     
     @photo_set = []
@@ -40,14 +41,23 @@ class  RedditParser
     
   end 
   
+  #Gets photo for each reddit data node.
   def getPhotoStack(parsedJson)
     counter = 0
     while parsedJson['data']['children'][counter] != nil
       imagesURL =  parsedJson['data']['children'][counter]['data']['url']
+      
+      #Following  conditional treats case where link in reddit node is a .jpg or .png
+      puts "tester #{imagesURL[-4]}"
+      if imagesURL[-4] == '.'
+        return imagesURL 
+        
+      else
       biggestPhotoUrl = findBiggestPhotoUrl(imagesURL)
       puts "\n\n Photo from reddit node #{counter} from url:#{imagesURL} -  #{biggestPhotoUrl} \n\n"
       @photo_set << biggestPhotoUrl
       counter += 1
+      end
     end
     
 
