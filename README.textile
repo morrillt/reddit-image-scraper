@@ -1,5 +1,7 @@
-h2. Learning Proj
-This project is intended to be a learning project where people who are relative noobs can come and build something together
+h2. Reddit Image Scraper
 
-h2. Proj
-This is a script about scraping images from reddit, and then later we will do something with it, like make a screensaver or make pinterest bots :)
+This is just a lil class that is initialized with a subreddit url and returns an array of images from said subreddit.
+Next up I am integrating with pinterest.
+
+Main point of this project is just to get feedback on my ruby form. And learn me some ruby code. This is my first script.
+
